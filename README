@@ -1,0 +1,22 @@
+= ImageRuby-Bmp - Handler extension of image files on bmp format
+
+Make possible to save and load images from disk on bmp format
+
+== Installation
+
+=== Gem installation
+
+sudo gem install imageruby-bmp
+
+== Usage
+
+No explicit require is needed
+
+  require "imageruby"
+
+  image = ImageRuby::Image.from_file("input.bmp")
+  image.save("output.bmp", :bmp)
+  
+== Copying
+
+Copyright (c) 2011 Dario Seminara, released under the GPL License (see LICENSE)
