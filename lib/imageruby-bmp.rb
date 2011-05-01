@@ -40,18 +40,37 @@ module ImageRuby
       width = dib_header[4..7].unpack("L").first
       height = dib_header[8..11].unpack("L").first
 
+      bpp = dib_header[14..15].unpack("S").first
       # create image object
 
       image = image_class.new(width,height)
 
-      padding_size = ( 4 - (width * 3 % 4) ) % 4
-      width_array_len = width*3 + padding_size
+      if bpp == 24
+        padding_size = ( 4 - (width * 3 % 4) ) % 4
+        width_array_len = width*3 + padding_size
 
-      # read pixel data
-      height.times do |y|
-        offset = pixeldata_offset+(height-y-1)*width_array_len
-        index = (y*width)*3
-        image.pixel_data[index..index+width*3] = data[offset..offset+width*3]
+        # read pixel data
+        height.times do |y|
+          offset = pixeldata_offset+(height-y-1)*width_array_len
+          index = (y*width)*3
+          image.pixel_data[index..index+width*3] = data[offset..offset+width*3]
+        end
+      elsif bpp == 32
+        padding_size = 0
+        width_array_len = width*4 + padding_size
+
+        # read pixel data
+        height.times do |y|
+          width.times do |x|
+            offset = pixeldata_offset+x*4+(height-y-1)*width_array_len
+            index = (y*width+x)*3
+            image.pixel_data[index..index+width*3] = data[offset..offset+width*3]
+
+          end
+        end
+      else
+        raise bpp.to_s
+        raise UnableToDecodeException
       end
 
       image
