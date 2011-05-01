@@ -64,12 +64,11 @@ module ImageRuby
           width.times do |x|
             offset = pixeldata_offset+x*4+(height-y-1)*width_array_len
             index = (y*width+x)*3
-            image.pixel_data[index..index+width*3] = data[offset..offset+width*3]
+            image.pixel_data[index..index+2] = data[offset..offset+2]
 
           end
         end
       else
-        raise bpp.to_s
         raise UnableToDecodeException
       end
 
